@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Kenobi",
+    "position": {
+      "positionX": -500,
+      "positionY": -100
+    }
+  },
+  {
+    "name": "Skywalker",
+    "position": {
+      "positionX": 100,
+      "positionY": -100
+    }
+  },
+  {
+    "name": "Sato",
+    "position": {
+      "positionX": 100,
+      "positionY": 100
+    }
+  }
+]
