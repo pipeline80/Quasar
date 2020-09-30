@@ -15,6 +15,43 @@ namespace Quasar.Controllers
     [ApiController]
     public class QuasarController : ControllerBase
     {
+        /// <summary>
+        /// Determine the postion of point with the disance and the position of 3 knows point
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Todo
+        ///	    [
+        ///		    {
+        ///			    "name": "Kenobi",
+        ///			    "distance": 100,
+        ///		    	"message": ["este", "", "", "mensaje",""]
+        ///	    	},
+        ///	    	{
+        ///	    		"name": "Skywalker",
+        ///	    		"distance": 115.5,
+        ///	    		"message": ["", "es", "", "", "secreto"]
+        ///	    	},
+        ///	    	{
+        ///	    		"name": "Sato",
+        ///	    		"distance": 142.7,
+        ///	    		"message": ["este", "", "un", "mensaje", ""]
+        ///	    	}
+        ///	    ]
+        /// </remarks>
+        /// <param name="satellites">List of satelites and the distance to each</param>
+        /// <returns>Json with the position and message</returns>
+        /// <response code="200">
+        /// {
+        ///		"position": {
+        ///		"x": -202.78354166666668,
+        ///		"y": -17.557599999999866
+        ///		},
+        ///		"message": "este es un mensaje secreto"
+        ///	}
+        ///	</response>
+        /// <response code="400">If the information is incomplete!!</response>
         [HttpPost("topSecret")]
         public IActionResult TopSecret(List<Satellite> satellites)
         {
@@ -38,6 +75,23 @@ namespace Quasar.Controllers
             };
             return Ok(reponse);
         }
+        /// <summary>
+        /// Determine the postion of point with the disance and the position of 3 knows point. Need a request to the server for each satellite
+        /// </summary>
+        /// <param name="name">Satellite Name</param>
+        /// <param name="distance">distance to the satellite</param>
+        /// <param name="message">part of the message in string comma separated Sample: message=este,es,un,,secreto</param>
+        /// <returns>Json with the position and message</returns>
+        /// <response code="200">
+        /// {
+        ///		"position": {
+        ///		"x": -202.78354166666668,
+        ///		"y": -17.557599999999866
+        ///		},
+        ///		"message": "este es un mensaje secreto"
+        ///	}
+        ///	</response>
+        /// <response code="400">If the information is incomplete!!</response>
         [HttpGet("TopSecret_Split")]
         public IActionResult TopSecretSplit(string name, double distance, string message)
         {
@@ -84,10 +138,44 @@ namespace Quasar.Controllers
                     },
                     message = Communications.GetMessage(FinalList)
                 };
+                DeleteCookie("message");
                 return Ok(reponse);
             }
             
         }
+        /// <summary>
+        /// Determine the postion of point with the disance and the position of 3 knows point
+        /// Need a request to the server to complete the info of all the satelites
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Todo
+        ///	    [
+        ///		    {
+        ///			    "name": "Kenobi",
+        ///			    "distance": 100,
+        ///		    	"message": ["este", "", "", "mensaje",""]
+        ///	    	},
+        ///	    	{
+        ///	    		"name": "Skywalker",
+        ///	    		"distance": 115.5,
+        ///	    		"message": ["", "es", "", "", "secreto"]
+        ///	    	}
+        ///	    ]
+        /// </remarks>
+        /// <param name="satellites"></param>
+        /// <returns>List of satelites and the distance to each one Can have 1 2 or 3 satellites in the request</returns>
+        /// <response code="200">
+        /// {
+        ///		"position": {
+        ///		"x": -202.78354166666668,
+        ///		"y": -17.557599999999866
+        ///		},
+        ///		"message": "este es un mensaje secreto"
+        ///	}
+        ///	</response>
+        /// <response code="400">If the information is incomplete!!</response>
         [HttpPost("TopSecret_Split")]
         public IActionResult TopSecretSplit(List<Satellite> satellites)
         {
@@ -125,9 +213,39 @@ namespace Quasar.Controllers
                     },
                     message = Communications.GetMessage(FinalList)
                 };
+                DeleteCookie("message");
                 return Ok(reponse);
             }
         }
+        /// <summary>
+        /// Determine the postion of point with the disance and the position of 3 knows point
+        /// Need a request to the server to complete the info of all the satelites
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Todo
+        ///	    [
+        ///		    {
+        ///			    "distance": 100,
+        ///		    	"message": ["este", "", "", "mensaje",""]
+        ///	    	}
+        ///	    ]
+        /// </remarks>
+        /// <param name="name"></param>
+        /// <param name="satellite"></param>
+        /// <returns>List of satelites and the distance to each one
+        /// Can have 1 2 or 3 satellites in the request</returns>
+        /// <response code="200">
+        /// {
+        ///		"position": {
+        ///		"x": -202.78354166666668,
+        ///		"y": -17.557599999999866
+        ///		},
+        ///		"message": "este es un mensaje secreto"
+        ///	}
+        ///	</response>
+        /// <response code="400">If the information is incomplete!!</response>
         [HttpPost("TopSecret_Split/{name}")]
         public IActionResult TopSecretSplit(string name, SatelliteForm satellite)
         {
@@ -175,10 +293,16 @@ namespace Quasar.Controllers
                     },
                     message = Communications.GetMessage(FinalList)
                 };
+                DeleteCookie("message");
                 return Ok(reponse);
             }
         }
-
+        /// <summary>
+        /// Set a cookie to save the satelite info
+        /// </summary>
+        /// <param name="key">cookie key</param>
+        /// <param name="value">json with the satellite info</param>
+        /// <param name="expireTime">time to expire the cookie</param>
         private void SetCookie(string key, string value, double? expireTime)
         {
             CookieOptions option = new CookieOptions();
@@ -188,9 +312,22 @@ namespace Quasar.Controllers
                 option.Expires = DateTime.Now.AddMilliseconds(10);
             Response.Cookies.Append(key, value, option);
         }
+        /// <summary>
+        /// Get a cookie with the satelite info
+        /// </summary>
+        /// <param name="key">cookie key</param>
+        /// <returns></returns>
         private string GetCookie(string key)
         {
             return Request.Cookies[key];
+        }
+        /// <summary>
+        /// Remove the cookie
+        /// </summary>
+        /// <param name="key">cookie key</param>
+        private void DeleteCookie(string key)
+        {
+            Response.Cookies.Delete(key);
         }
     }
 }

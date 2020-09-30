@@ -12,6 +12,13 @@
     <ProjectReference Include="..\Entities\Entities.csproj" />
     <ProjectReference Include="..\Logic\Logic.csproj" />
   </ItemGroup>
-
+	<PropertyGroup>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <OutputPath>bin\Debug\netcoreapp3.1\</OutputPath>
+	  <DocumentationFile>bin\Debug\netcoreapp3.1\Quasar.xml</DocumentationFile>
+	</PropertyGroup>
 
 </Project>
